@@ -1,5 +1,4 @@
 import FaultEquationCalculator from "./fault_equation_calculator";
-import React, { Suspense } from "react";
 
 function App() {
   return (
