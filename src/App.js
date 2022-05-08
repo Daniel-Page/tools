@@ -9,7 +9,7 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route
-              path="fault_equation_calculator"
+              path="./"
               element={<FaultEquationCalculator />}
             />
           </Routes>
