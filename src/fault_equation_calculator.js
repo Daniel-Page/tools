@@ -21,11 +21,12 @@ function FaultEquationCalculator() {
   const [tm, set_tm] = useState(1);
   const [I_ratio_min, set_I_ratio_min] = useState(0);
   const [I_ratio_max, set_I_ratio_max] = useState(15);
-  const [I_ratio_increments, set_I_ratio_increments] = useState(1000);
+  const [I_ratio_increments, set_I_ratio_increments] = useState(500);
   const [logarithmic, set_logarithmic] = useState(true);
   const [graph_logarithmic, set_graph_logarithmic] = useState("logarithmic");
   const [data, set_data] = useState("");
   const [graph_error, set_graph_error] = useState("");
+  const [equation_selected, set_equation_selected] = useState("equation_1");
 
   // eslint-disable-next-line
   useEffect(handle_graph_update, [
@@ -33,6 +34,7 @@ function FaultEquationCalculator() {
     I_ratio_min,
     I_ratio_max,
     I_ratio_increments,
+    equation_selected,
   ]);
 
   function handle_graph_update() {
@@ -118,6 +120,10 @@ function FaultEquationCalculator() {
       .join("");
   }
 
+  const handle_equation_change = (event) => {
+    set_equation_selected(event.target.value);
+  };
+
   function handle_log_change() {
     if (logarithmic === true) {
       set_logarithmic(false);
@@ -133,7 +139,15 @@ function FaultEquationCalculator() {
   }
 
   function fault_equation(tm, I_ratio) {
-    return (tm * 0.14) / (Math.pow(I_ratio, 0.02) - 1);
+    if (equation_selected === "equation_1") {
+      return (tm * 0.14) / (Math.pow(I_ratio, 0.02) - 1);
+    } else if (equation_selected === "equation_2") {
+      return (13.5 * tm) / (I_ratio - 1);
+    } else if (equation_selected === "equation_3") {
+      return (80 * tm) / (Math.pow(I_ratio, 2) - 1);
+    } else if (equation_selected === "equation_4") {
+      return (120 * tm) / (I_ratio - 1);
+    }
   }
 
   function display_single_fault_equation() {
@@ -275,9 +289,61 @@ function FaultEquationCalculator() {
       <br></br>
 
       <div style={{ textAlign: "center" }}>
-        <InlineMath math="t = \dfrac{t_m0.14}{I_{ratio}^{0.02}-1}" />
-      </div>
+        <Container>
+          <Row>
+            <Col>
+              <Form.Check
+                inline
+                label="Standard Inverse"
+                value="equation_1"
+                checked={equation_selected === "equation_1"}
+                onChange={handle_equation_change}
+                type={"radio"}
+              />
+              <br />
 
+              <InlineMath math="t = \dfrac{t_m0.14}{I_{ratio}^{0.02}-1}" />
+            </Col>
+            <Col>
+              <Form.Check
+                inline
+                label="Very Inverse"
+                value="equation_2"
+                checked={equation_selected === "equation_2"}
+                onChange={handle_equation_change}
+                type={"radio"}
+              />
+              <br />
+              <InlineMath math="t = \dfrac{t_m13.5}{I_{ratio}-1}" />
+            </Col>
+
+            <Col>
+              <Form.Check
+                inline
+                label="Extremely Inverse"
+                value="equation_3"
+                checked={equation_selected === "equation_3"}
+                onChange={handle_equation_change}
+                type={"radio"}
+              />
+              <br />
+              <InlineMath math="t = \dfrac{t_m80}{I_{ratio}^2-1}" />
+            </Col>
+            <Col>
+              <Form.Check
+                inline
+                label="Long Time Inverse"
+                value="equation_4"
+                checked={equation_selected === "equation_4"}
+                onChange={handle_equation_change}
+                type={"radio"}
+              />
+              <br />
+              <InlineMath math="t = \dfrac{t_m120}{I_{ratio}-1}" />
+            </Col>
+          </Row>
+        </Container>
+      </div>
       <br></br>
       <br></br>
       {/* xs (phones), sm (tablets), md (desktops), and lg (larger desktops). */}
